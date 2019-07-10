@@ -59,9 +59,9 @@ Here, each voter, in addition to specifying their first preference candidate, ha
 
 Ranked choice voting can also solve yet another potential drawback of plurality voting. Take a look at the following ballots.
 
-![Seven ballots, with ranked preferences](ranked_ballot_2.png)
+![Seven ballots, with ranked preferences](ranked_ballot_3.png)
 
-Who should win this election? In a plurality vote where each voter chooses their first preference only, Charlie wins this election with three votes compared to only two for each of Alice and Bob. But a majority of the voters (4 out of the 7) would be happier with either Alice or Bob instead of Charlie. By considering ranked preferences, a voting system may be able to choose a winner that better reflects the preferences of the voters.
+Who should win this election? In a plurality vote where each voter chooses their first preference only, Charlie wins this election with four votes compared to only three for Bob and two for Alice. But a majority of the voters (5 out of the 9) would be happier with either Alice or Bob instead of Charlie. By considering ranked preferences, a voting system may be able to choose a winner that better reflects the preferences of the voters.
 
 One such ranked choice voting system is the instant runoff system. In an instant runoff election, voters can rank as many candidates as they wish. If any candidate has a majority (more than 50%) of the first preference votes, that candidate is declared the winner of the election.
 
@@ -71,7 +71,7 @@ The process repeats: if no candidate has a majority of the votes, the last place
 
 Let's consider the following ballots and explore how a runoff election would take place.
 
-![Five ballots, with ranked preferences](ranked_ballot_3.png)
+![Five ballots, with ranked preferences](ranked_ballot_4.png)
 
 Alice has two votes, Bob has two votes, and Charlie has one vote. To win an election with five people, a majority (three votes) is required. Since nobody has a majority, a runoff needs to be held. Charlie has the fewest number of votes (with only one), so Charlie is eliminated. The voter who voted for Charile's second preference is Alice, so Alice gets the extra vote. Alice now has three votes, and Bob has two votes. Alice now has a majority, and Alice is declared the winner.
 
