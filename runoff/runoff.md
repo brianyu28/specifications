@@ -73,7 +73,7 @@ Let's consider the following ballots and explore how a runoff election would tak
 
 ![Five ballots, with ranked preferences](ranked_ballot_4.png)
 
-Alice has two votes, Bob has two votes, and Charlie has one vote. To win an election with five people, a majority (three votes) is required. Since nobody has a majority, a runoff needs to be held. Charlie has the fewest number of votes (with only one), so Charlie is eliminated. The voter who voted for Charile's second preference is Alice, so Alice gets the extra vote. Alice now has three votes, and Bob has two votes. Alice now has a majority, and Alice is declared the winner.
+Alice has two votes, Bob has two votes, and Charlie has one vote. To win an election with five people, a majority (three votes) is required. Since nobody has a majority, a runoff needs to be held. Charlie has the fewest number of votes (with only one), so Charlie is eliminated. The voter who originally voted for Charlie listed Alice as second preference, so Alice gets the extra vote. Alice now has three votes, and Bob has two votes. Alice now has a majority, and Alice is declared the winner.
 
 What corner cases do we need to consider here?
 
@@ -85,9 +85,9 @@ Sounds a bit more complicated than a plurality vote, doesn't it? But it arguably
 
 ## Understanding
 
-Let's open up `runoff.c` to take a look at what's already there. We're defining a few constants: `MAX_CANDIDATES` for the maximum number of candidates in the election, `MAX_VOTERS` for the maximum number of voters in the election, and `NO_CANDIDATE` a special so-called "sentinel value" that will be used to represent the absence of a candidate preference. Recall that each candidate is numbered by their index in an array, so `-1` is a safe choice for a value that won't be taken by any other candidate.
+Let's open up `runoff.c` to take a look at what's already there. We're defining a few constants: `MAX_CANDIDATES` for the maximum number of candidates in the election, `MAX_VOTERS` for the maximum number of voters in the election, and `NO_CANDIDATE`, a special so-called "sentinel value" that will be used to represent the absence of a candidate preference. Recall that each candidate is numbered by their index in an array, so `-1` is a safe choice for a value that won't be taken by any other candidate.
 
-Next up is a two dimensional array `prefs`. The array `prefs[i]` will represent all of the preferences for voter number `i`, and the integer `prefs[i][j]` here will store the index of the candidate who is the `j`th preference for voter `i`.
+Next up is a two-dimensional array `prefs`. The array `prefs[i]` will represent all of the preferences for voter number `i`, and the integer `prefs[i][j]` here will store the index of the candidate who is the `j`th preference for voter `i`.
 
 We also have three one-dimensional arrays: an array of `candidates` and an array of `votes`, much like the plurality election, but also a boolean array called `eliminated`. This array will keep track of which candidates have already been eliminated from the race. The program also has two global variables: `voter_count` and `candidate_count`.
 
@@ -95,7 +95,7 @@ Now onto `main`. Notice that after determining the number of candidates and the 
 
 Once all of the votes are in, another loop begins: this one's going to keep looping through the runoff process of checking for a winner and eliminating the last place candidate until there is a winner.
 
-The first call here is to a function called `tabulate`, which should look at all of the voter's preferences and compute the current vote totals, by looking at each voter's top choice candidate who hasn't yet been eliminated. If there's a winner, their name is printed (via a call to `print_winner`) and the program is over. But otherwise, the program needs to determine the minimum number of votes a candidate has (via a call to `get_minimum`), and then eliminate any candidate who has that number of votes (via a call to `eliminate`).
+The first call here is to a function called `tabulate`, which should look at all of the voters' preferences and compute the current vote totals, by looking at each voter's top choice candidate who hasn't yet been eliminated. If there's a winner, their name is printed (via a call to `print_winner`) and the program is over. But otherwise, the program needs to determine the minimum number of votes a candidate has (via a call to `get_minimum`), and then eliminate any candidate who has that number of votes (via a call to `eliminate`).
 
 If you look a bit further down in the file, you'll see that these functions — `record_preference`, `tabulate`, `print_winner`, `get_minimum`, and `eliminate` — are all left to up to you to complete!
 
@@ -119,7 +119,7 @@ Complete the implementation of `runoff.c` in such a way that it simulates a runo
 * Complete the `eliminate` function.
   * The function takes as argument `min`, the minimum number of votes that any candidate who has not yet been eliminated has.
   * The function should update the `eliminated` array such that any candidate who has only `min` votes is eliminated.
- 
+
 ## Walkthrough
 
 TODO
