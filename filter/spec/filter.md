@@ -40,16 +40,7 @@ Recall that a file is just a sequence of bits, arranged in some fashion. A 24-bi
 
 The first of these headers, called `BITMAPFILEHEADER`, is 14 bytes long. (Recall that 1 byte equals 8 bits.) The second of these headers, called `BITMAPINFOHEADER`, is 40 bytes long. Immediately following these headers is the actual bitmap: an array of bytes, triples of which represent a pixel's color. However, BMP stores these triples backwards (i.e., as BGR), with 8 bits for blue, followed by 8 bits for green, followed by 8 bits for red. (Some BMPs also store the entire bitmap backwards, with an image's top row at the end of the BMP file. But we've stored this problem set's BMPs as described herein, with each bitmap's top row first and bottom row last.) In other words, were we to convert the 1-bit smiley above to a 24-bit smiley, substituting red for black, a 24-bit BMP would store this bitmap as follows, where `0000ff` signifies red and `ffffff` signifies white; we've highlighted in red all instances of `0000ff`.
 
-<div style="font-family: courier">
-ffffff  ffffff  <span style="color:red;font-weight:bold">0000ff</span>  <span style="color:red;font-weight:bold">0000ff</span>  <span style="color:red;font-weight:bold">0000ff</span>  <span style="color:red;font-weight:bold">0000ff</span>  ffffff  ffffff<br/>
-ffffff  <span style="color:red;font-weight:bold">0000ff</span>  ffffff  ffffff  ffffff  ffffff  <span style="color:red;font-weight:bold">0000ff</span>  ffffff<br/>
-<span style="color:red;font-weight:bold">0000ff</span>  ffffff  <span style="color:red;font-weight:bold">0000ff</span>  ffffff  ffffff  <span style="color:red;font-weight:bold">0000ff</span>  ffffff  <span style="color:red;font-weight:bold">0000ff</span><br/>
-<span style="color:red;font-weight:bold">0000ff</span>  ffffff  ffffff  ffffff  ffffff  ffffff  ffffff  <span style="color:red;font-weight:bold">0000ff</span><br/>
-<span style="color:red;font-weight:bold">0000ff</span>  ffffff  <span style="color:red;font-weight:bold">0000ff</span>  ffffff  ffffff  <span style="color:red;font-weight:bold">0000ff</span>  ffffff  <span style="color:red;font-weight:bold">0000ff</span><br/>
-<span style="color:red;font-weight:bold">0000ff</span>  ffffff  ffffff  <span style="color:red;font-weight:bold">0000ff</span>  <span style="color:red;font-weight:bold">0000ff</span>  ffffff  ffffff  <span style="color:red;font-weight:bold">0000ff</span><br/>
-ffffff  <span style="color:red;font-weight:bold">0000ff</span>  ffffff  ffffff  ffffff  ffffff  <span style="color:red;font-weight:bold">0000ff</span>  ffffff<br/>
-ffffff  ffffff  <span style="color:red;font-weight:bold">0000ff</span>  <span style="color:red;font-weight:bold">0000ff</span>  <span style="color:red;font-weight:bold">0000ff</span>  <span style="color:red;font-weight:bold">0000ff</span>  ffffff  ffffff
-</div>
+![red smile](red_smile.png)
 
 Because we've presented these bits from left to right, top to bottom, in 8 columns, you can actually see the red smiley if you take a step back.
 
