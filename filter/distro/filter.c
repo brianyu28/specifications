@@ -75,8 +75,8 @@ int main(int argc, char *argv[])
     int width = bi.biWidth;
 
     // allocate memory for image
-    RGBTRIPLE (*pixels)[width] = calloc(height, width * sizeof(RGBTRIPLE));
-    if (pixels == NULL)
+    RGBTRIPLE (*image)[width] = calloc(height, width * sizeof(RGBTRIPLE));
+    if (image == NULL)
     {
         fprintf(stderr, "Not enough memory to store image.\n");
         fclose(outptr);
@@ -91,7 +91,7 @@ int main(int argc, char *argv[])
     for (int i = 0; i < height; i++)
     {
         // read row into pixel array
-        fread(pixels[i], sizeof(RGBTRIPLE), width, inptr);
+        fread(image[i], sizeof(RGBTRIPLE), width, inptr);
 
         // skip over padding
         fseek(inptr, padding, SEEK_CUR);
@@ -103,23 +103,23 @@ int main(int argc, char *argv[])
         // blur
         case 'b':
         {
-            blur(height, width, pixels);
+            blur(height, width, image);
             break;
         }
 
         // grayscale
         case 'g':
-            grayscale(height, width, pixels);
+            grayscale(height, width, image);
             break;
 
         // reflection
         case 'r':
-            reflect(height, width, pixels);
+            reflect(height, width, image);
             break;
 
         // sepia
         case 's':
-            sepia(height, width, pixels);
+            sepia(height, width, image);
             break;
     }
 
@@ -133,7 +133,7 @@ int main(int argc, char *argv[])
     for (int i = 0; i < height; i++)
     {
         // write row to outfile
-        fwrite(pixels[i], sizeof(RGBTRIPLE), width, outptr);
+        fwrite(image[i], sizeof(RGBTRIPLE), width, outptr);
 
         // write padding at end of row
         for (int k = 0; k < padding; k++)
@@ -143,7 +143,7 @@ int main(int argc, char *argv[])
     }
 
     // free memory for image
-    free(pixels);
+    free(image);
 
     // close infile
     fclose(inptr);
