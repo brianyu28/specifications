@@ -1,68 +1,77 @@
 #include <cs50.h>
 #include <stdio.h>
 #include <string.h>
-#include <strings.h>
 
-// max number of candidates
+// Max number of candidates
 #define MAX 9
 
-// array of vote totals and candidate names
-int votes[MAX];
-string candidates[MAX];
+// Candidates have name and vote count
+typedef struct
+{
+    string name;
+    int votes;
+}
+candidate;
 
-// number of candidates
-int count;
+// Array of candidates
+candidate candidates[MAX];
 
-// function prototypes
-bool vote(string candidate);
-void print_winner();
+// Number of candidates
+int candidate_count;
+
+// Function prototypes
+bool vote(string name);
+void print_winner(void);
 
 int main(int argc, string argv[])
 {
-    // check for invalid usage
+    // Check for invalid usage
     if (argc < 2)
     {
-        fprintf(stderr, "Usage: plurality [candidate ...]\n");
+        printf("Usage: plurality [candidate ...]\n");
         return 1;
     }
 
-    // populate array of candidates
-    count = argc - 1;
-    if (count > MAX)
+    // Populate array of candidates
+    candidate_count = argc - 1;
+    if (candidate_count > MAX)
     {
-        fprintf(stderr, "Maximum number of candidates is %i\n", MAX);
+        printf("Maximum number of candidates is %i\n", MAX);
         return 2;
     }
-    for (int i = 0; i < count; i++)
+    for (int i = 0; i < candidate_count; i++)
     {
-        candidates[i] = argv[i + 1];
+        candidates[i].name = argv[i + 1];
+        candidates[i].votes = 0;
     }
 
-    int voters = get_int("Number of voters: ");
+    int voter_count = get_int("Number of voters: ");
 
-    // loop over all voters
-    for (int i = 0; i < voters; i++)
+    // Loop over all voters
+    for (int i = 0; i < voter_count; i++)
     {
-        string candidate = get_string("Vote: ");
+        string name = get_string("Vote: ");
 
-        // check for invalid vote
-        if (!vote(candidate))
+        // Check for invalid vote
+        if (!vote(name))
         {
             printf("Invalid vote.\n");
         }
     }
 
-    // display winner of election
+    // Display winner of election
     print_winner();
 }
 
-// update vote totals given a new vote
-bool vote(string candidate)
+// Update vote totals given a new vote
+bool vote(string name)
 {
     // TODO
+    return false;
 }
 
-void print_winner()
+void print_winner(void)
 {
     // TODO
+    return;
 }
