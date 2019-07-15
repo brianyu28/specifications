@@ -6,24 +6,24 @@ Implement a program that runs a runoff election, per the below.
 ./runoff Alice Bob Charlie
 Number of voters: 5
 Rank 1: Alice
-Rank 2: Charlie
-Rank 3:
+Rank 2: Bob
+Rank 3: Charlie
 
 Rank 1: Alice
 Rank 2: Charlie
-Rank 3:
+Rank 3: Bob
 
 Rank 1: Bob
 Rank 2: Charlie
-Rank 3:
+Rank 3: Alice
 
 Rank 1: Bob
-Rank 2: Charlie
-Rank 3:
+Rank 2: Alice 
+Rank 3: Charlie 
 
 Rank 1: Charlie
 Rank 2: Alice
-Rank 3:
+Rank 3: Bob
 
 Alice
 ```
@@ -47,19 +47,19 @@ You already know about plurality elections, which follow a very simple algorithm
 
 But the plurality vote does have some disadvantages. What happens, for instance, in an election with three candidates, and the ballots below are cast?
 
-![Three ballots, each for a different candidate](fptp_ballot_1.png)
+![Five ballots, tie betweeen Alice and Bob](fptp_ballot_1.png)
 
-A plurality vote would here declare a tie between the three candidates, since each has one vote. But is that the right outcome?
+A plurality vote would here declare a tie between Alice and Bob, since each has two votes. But is that the right outcome?
 
 There's another kind of voting system known as a ranked-choice voting system. In a ranked-choice system, voters can vote for more than one candidate. Instead of just voting for their top choice, they can rank their top choices. The resulting ballots might therefore look like the below.
 
 ![Three ballots, with ranked preferences](ranked_ballot_1.png)
 
-Here, each voter, in addition to specifying their first preference candidate, has also indicated their second and third choices. And now, what was previously a tied election can now have a winner: Charlie, though he received just one first-preference vote, was the second preference for the other two voters, and is thus arguably the best choice of a winner out of the three.
+Here, each voter, in addition to specifying their first preference candidate, has also indicated their second and third choices. And now, what was previously a tied election could now have a winner. The race was originally tied between Alice and Bob, so Charlie was out of the running. But the voter who chose Charlie preferred Alice over Bob, so Alice could here be declared the winner.
 
 Ranked choice voting can also solve yet another potential drawback of plurality voting. Take a look at the following ballots.
 
-![Seven ballots, with ranked preferences](ranked_ballot_3.png)
+![Nine ballots, with ranked preferences](ranked_ballot_3.png)
 
 Who should win this election? In a plurality vote where each voter chooses their first preference only, Charlie wins this election with four votes compared to only three for Bob and two for Alice. But a majority of the voters (5 out of the 9) would be happier with either Alice or Bob instead of Charlie. By considering ranked preferences, a voting system may be able to choose a winner that better reflects the preferences of the voters.
 
@@ -69,56 +69,53 @@ If no candidate has more than 50% of the vote, then an "instant runoff" occurrs.
 
 The process repeats: if no candidate has a majority of the votes, the last place candidate is eliminated, and anyone who voted for them will instead vote for their next preference (who hasn't themselves already been eliminated). Once a candidate has a majority, that candidate is declared the winner.
 
-Let's consider the following ballots and explore how a runoff election would take place.
+Let's consider the nine ballots above and examine how a runoff election would take place.
 
-![Five ballots, with ranked preferences](ranked_ballot_4.png)
-
-Alice has two votes, Bob has two votes, and Charlie has one vote. To win an election with five people, a majority (three votes) is required. Since nobody has a majority, a runoff needs to be held. Charlie has the fewest number of votes (with only one), so Charlie is eliminated. The voter who originally voted for Charlie listed Alice as second preference, so Alice gets the extra vote. Alice now has three votes, and Bob has two votes. Alice now has a majority, and Alice is declared the winner.
+Alice has two votes, Bob has three votes, and Charlie has four votes. To win an election with nine people, a majority (five votes) is required. Since nobody has a majority, a runoff needs to be held. Alice has the fewest number of votes (with only two), so Alice is eliminated. The voters who originally voted for Alice listed Bob as second preference, so Bob gets the extra two vote. Bob now has five votes, and Charlie still has four votes. Bob now has a majority, and Bob is declared the winner.
 
 What corner cases do we need to consider here?
 
-One possibility is that there's a tie for who should get eliminated. We can handle that scenario by saying all candidates who are tied for last place will be eliminated. If every remaining candidate has the exact same number of votes, though, eliminating the tied last place candidates means eliminating everyone! So in that case, we'll just declare the election a tie between all remaining candidates.
+One possibility is that there's a tie for who should get eliminated. We can handle that scenario by saying all candidates who are tied for last place will be eliminated. If every remaining candidate has the exact same number of votes, though, eliminating the tied last place candidates means eliminating everyone! So in that case, we'll have to be careful not to eliminate everyone, and just declare the election a tie between all remaining candidates.
 
-We also need to consider what happens with ballots that don't rank all of their preferences. Say someone only ranks two of the five candidates in an election, but both of those candidates have been eliminated. What happens if both of their preferences have been eliminated, but the election doesn't have a winner yet? Recall that in the runoff process, we simulate what would have happened if the eliminated candidates hadn't been in the election at all. In that case, since our hypothetical voter only voted for candidates who were eliminated, then in this stage of the runoff, the voter doesn't vote at all: none of their preferences count anymore, and the voter doesn't even count towards the total number of voters in the election.
+Some instant runoff elections don't require voters to rank all of their preferences — so there might be five candidates in an eletcion, but a voter might only choose two. For this problem's purposes, though, we'll ignore that particular corner case, and assume that all voters will rank all of the candidates in their preferred order.
 
 Sounds a bit more complicated than a plurality vote, doesn't it? But it arguably has the benefit of being an election system where the winner of the election more accurately represents the preferences of the voters.
 
 ## Understanding
 
-Let's open up `runoff.c` to take a look at what's already there. We're defining a few constants: `MAX_CANDIDATES` for the maximum number of candidates in the election, `MAX_VOTERS` for the maximum number of voters in the election, and `NO_CANDIDATE`, a special so-called "sentinel value" that will be used to represent the absence of a candidate preference. Recall that each candidate is numbered by their index in an array, so `-1` is a safe choice for a value that won't be taken by any other candidate.
+Let's open up `runoff.c` to take a look at what's already there. We're defining two constants: `MAX_CANDIDATES` for the maximum number of candidates in the election, and `MAX_VOTERS` for the maximum number of voters in the election.
 
-Next up is a two-dimensional array `prefs`. The array `prefs[i]` will represent all of the preferences for voter number `i`, and the integer `prefs[i][j]` here will store the index of the candidate who is the `j`th preference for voter `i`.
+Next up is a two-dimensional array `preferences`. The array `preferences[i]` will represent all of the preferences for voter number `i`, and the integer `preferences[i][j]` here will store the index of the candidate who is the `j`th preference for voter `i`.
 
-We also have three one-dimensional arrays: an array of `candidates` and an array of `votes`, much like the plurality election, but also a boolean array called `eliminated`. This array will keep track of which candidates have already been eliminated from the race. The program also has two global variables: `voter_count` and `candidate_count`.
+Next up is a `struct` called `candidate`. Every `candidate` has a `string` field for their `name`, and `int` representing the number of `votes` they currently have, and a `bool` value called `eliminate` that indicates whether the candidate has been eliminated from the election. The array `candidates` will keep track of all of the candidates in the election.
 
-Now onto `main`. Notice that after determining the number of candidates and the number of voters, the main voting loop begins, giving every voter a chance to vote. At first, all of the voter's preferences are set to `NO_CANDIDATE`, since they haven't ranked anyone yet. As the voter enters their preferences, the `record_preference` function is called to keep track of all of the preferences. If at any point, the ballot is deemed invalid, the ballot is canceled, with all of the preferences set back to `NO_CANDIDATE`.
+The program also has two global variables: `voter_count` and `candidate_count`.
+
+Now onto `main`. Notice that after determining the number of candidates and the number of voters, the main voting loop begins, giving every voter a chance to vote. As the voter enters their preferences, the `vote` function is called to keep track of all of the preferences. If at any point, the ballot is deemed to be invalid, the program exits.
 
 Once all of the votes are in, another loop begins: this one's going to keep looping through the runoff process of checking for a winner and eliminating the last place candidate until there is a winner.
 
-The first call here is to a function called `tabulate`, which should look at all of the voters' preferences and compute the current vote totals, by looking at each voter's top choice candidate who hasn't yet been eliminated. If there's a winner, their name is printed (via a call to `print_winner`) and the program is over. But otherwise, the program needs to determine the minimum number of votes a candidate has (via a call to `get_minimum`), and then eliminate any candidate who has that number of votes (via a call to `eliminate`).
+The first call here is to a function called `tabulate`, which should look at all of the voters' preferences and compute the current vote totals, by looking at each voter's top choice candidate who hasn't yet been eliminated. Next, the `print_winner` function should print out the winner if there is one; if there is, the program is over. But otherwise, the program needs to (via a call to `eliminate`) eliminate the last-place candidate (or candidates) from the election. If nobody is eliminated (because everyone left in the election is tied), then the election is declared a tie.
 
-If you look a bit further down in the file, you'll see that these functions — `record_preference`, `tabulate`, `print_winner`, `get_minimum`, and `eliminate` — are all left to up to you to complete!
+If you look a bit further down in the file, you'll see that these functions — `vote`, `tabulate`, `print_winner`, and `eliminate` — are all left to up to you to complete!
 
 ## Specification
 
 Complete the implementation of `runoff.c` in such a way that it simulates a runoff election.
 
-* Complete the `record_preference` function.
-  * The function takes arguments `voter`, `rank`, and `candidate`. If `candidate` is a (case-insensitive) match for the name of a valid candidate, then you should update the global preferences array to indicate that the voter `voter` has the `candidate` as their `rank` preference.
-  * If the preference is successfully recorded, the function should return `true`; the function should return `false` otherwise (if, for instance, `candidate` is not the name of one of the candidates).
+* Complete the `vote` function.
+  * The function takes arguments `voter`, `rank`, and `name`. If `name` is a match for the name of a valid candidate, then you should update the global preferences array to indicate that the voter `voter` has that candidate as their `rank` preference.
+  * If the preference is successfully recorded, the function should return `true`; the function should return `false` otherwise (if, for instance, `name` is not the name of one of the candidates).
 * Complete the `tabulate` function.
-  * At the end of the a call to `tabulate`, the `votes` array should reflect the number of votes that each candidate has at this stage in the runoff.
+  * The function should update the number of `votes` each candidate has at this stage in the runoff.
   * Recall that at each stage in the runoff, every voter effectively votes for their top-preferred candidate who has not already been eliminated.
-  * The function should return the number of voters who are still relevant to the election. A voter is no longer relevant if all of their recorded preferences have been eliminated.
 * Complete the `print_winner` function.
-  * The function takes a single argument, `total`, indicating the number of relevant voters left in the election.
-  * If a candidate has a vote count greater than half of the `total`, their name should be printed to `stdout` and the function should return `true`.
+  * If any candidate has more than half of the vote, their name should be printed to `stdout` and the function should return `true`.
   * If nobody has won the election yet, the function should return `false`.
-* Complete the `get_minimum` function.
-  * The function should return the minimum number of votes that any candidate who has not yet been eliminated has.
 * Complete the `eliminate` function.
-  * The function takes as argument `min`, the minimum number of votes that any candidate who has not yet been eliminated has.
-  * The function should update the `eliminated` array such that any candidate who has only `min` votes is eliminated.
+  * The function should eliminate the candidate (or candidates) who are still in the race and have the fewest number of votes.
+  * If all remaining candidates are tied at the same number of votes, then the function should not eliminate anyone and return `false`.
+  * Otherwise, the function should reset all candidates' vote counts back to `0` and return `true`.
 
 ## Walkthrough
 
@@ -126,61 +123,43 @@ TODO
 
 ## Usage
 
-Your program should behave per the examples: below:
+Your program should behave per the example below:
 
 ```
 ./runoff Alice Bob Charlie
 Number of voters: 5
 Rank 1: Alice
 Rank 2: Charlie
-Rank 3:
+Rank 3: Bob
 
 Rank 1: Alice
 Rank 2: Charlie
-Rank 3:
+Rank 3: Bob
 
 Rank 1: Bob
 Rank 2: Charlie
-Rank 3:
+Rank 3: Alice
 
 Rank 1: Bob
 Rank 2: Charlie
-Rank 3:
+Rank 3: Alice
 
 Rank 1: Charlie
 Rank 2: Alice
-Rank 3:
+Rank 3: Bob
 
 Alice
 ```
-
-```
-$ ./runoff Alice Bob Charlie
-Number of voters: 2
-Rank 1: Alice
-Rank 2: Bob
-Rank 3: Charlie
-
-Rank 1: Bob
-Rank 2: David
-Invalid vote.
-
-Alice
-```
-
-## Hints
-
-* You may find the [strcasecmp](https://man.cs50.io/3/strcasecmp) function helpful for comparing whether two strings are identical.
 
 ## Testing
 
 Be sure to test your code to make sure it handles...
 
 * An election with any number of candidate (up to the `MAX` of `9`)
-* Voting for a candidate by name, case-insensitively
+* Voting for a candidate by name
 * Invalid votes for candidates who are not on the ballot
 * Printing the winner of the election if there is only one
-* Printing the winner of the election if there are multiple winners
+* Not eliminating anyone in the case of a tie between all remaining candidates
 
 ## How to Submit
 
