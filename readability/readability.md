@@ -38,7 +38,7 @@ Grade 5
 
 This text has 214 letters, 4 sentences, and 56 words. That comes out to about 382.14 letters per 100 words, and 7.14 sentences per 100 words. Plugged into the Coleman-Liau formula, we get a fifth grade reading level.
 
-As the average number of letters and words per sentence increases, the Coleman-Liau index gives the text a higher reading level. If you were to take this paragraph, for instance, which has longer words and sentences than either of the prior two examples, the formula would give the text a eleventh grade reading level.
+As the average number of letters and words per sentence increases, the Coleman-Liau index gives the text a higher reading level. If you were to take this paragraph, for instance, which has longer words and sentences than either of the prior two examples, the formula would give the text an eleventh grade reading level.
 
 ```
 $ ./readability
@@ -95,7 +95,7 @@ The Coleman-Liau index cares not only about the number of letters, but also the 
 
 Modify `readability.c` so that, in addition to printing out the number of letters in the text, also prints out the number of words in the text.
 
-Be sure that, if extra spaces are added between words, or at the beginning or end of the text, you handle those cases appropriately. `"all  was    well"`, "  all was well"` and "all was well   "` should each have only three words.
+Be sure that, if extra spaces are added between words, or at the beginning or end of the text, you handle those cases appropriately. `"all  was    well"`, `"  all was well"` and `"all was well   "` should each have only three words.
 
 The behavior of the resulting program should be like the below.
 
