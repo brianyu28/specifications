@@ -18,8 +18,8 @@ Rank 2: Charlie
 Rank 3: Alice
 
 Rank 1: Bob
-Rank 2: Alice 
-Rank 3: Charlie 
+Rank 2: Alice
+Rank 3: Charlie
 
 Rank 1: Charlie
 Rank 2: Alice
@@ -51,7 +51,7 @@ But the plurality vote does have some disadvantages. What happens, for instance,
 
 A plurality vote would here declare a tie between Alice and Bob, since each has two votes. But is that the right outcome?
 
-There's another kind of voting system known as a ranked-choice voting system. In a ranked-choice system, voters can vote for more than one candidate. Instead of just voting for their top choice, they can rank their top choices. The resulting ballots might therefore look like the below.
+There's another kind of voting system known as a ranked-choice voting system. In a ranked-choice system, voters can vote for more than one candidate. Instead of just voting for their top choice, they can rank the candidates in order of preference. The resulting ballots might therefore look like the below.
 
 ![Three ballots, with ranked preferences](ranked_ballot_1.png)
 
@@ -77,7 +77,7 @@ What corner cases do we need to consider here?
 
 One possibility is that there's a tie for who should get eliminated. We can handle that scenario by saying all candidates who are tied for last place will be eliminated. If every remaining candidate has the exact same number of votes, though, eliminating the tied last place candidates means eliminating everyone! So in that case, we'll have to be careful not to eliminate everyone, and just declare the election a tie between all remaining candidates.
 
-Some instant runoff elections don't require voters to rank all of their preferences — so there might be five candidates in an eletcion, but a voter might only choose two. For this problem's purposes, though, we'll ignore that particular corner case, and assume that all voters will rank all of the candidates in their preferred order.
+Some instant runoff elections don't require voters to rank all of their preferences — so there might be five candidates in an election, but a voter might only choose two. For this problem's purposes, though, we'll ignore that particular corner case, and assume that all voters will rank all of the candidates in their preferred order.
 
 Sounds a bit more complicated than a plurality vote, doesn't it? But it arguably has the benefit of being an election system where the winner of the election more accurately represents the preferences of the voters.
 
@@ -104,7 +104,7 @@ If you look a bit further down in the file, you'll see that these functions — 
 Complete the implementation of `runoff.c` in such a way that it simulates a runoff election.
 
 * Complete the `vote` function.
-  * The function takes arguments `voter`, `rank`, and `name`. If `name` is a match for the name of a valid candidate, then you should update the global preferences array to indicate that the voter `voter` has that candidate as their `rank` preference.
+  * The function takes arguments `voter`, `rank`, and `name`. If `name` is a match for the name of a valid candidate, then you should update the global preferences array to indicate that the voter `voter` has that candidate as their `rank` preference (where `0` is the first preference, `1` is the second preference, etc.).
   * If the preference is successfully recorded, the function should return `true`; the function should return `false` otherwise (if, for instance, `name` is not the name of one of the candidates).
 * Complete the `tabulate` function.
   * The function should update the number of `votes` each candidate has at this stage in the runoff.

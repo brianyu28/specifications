@@ -42,7 +42,7 @@ As the average number of letters and words per sentence increases, the Coleman-L
 
 ```
 $ ./readability
-Text: As the average number of letters and words per sentence increases, the Coleman-Liau index gives the text a higher reading level. If you were to take this paragraph, for instance, which has longer words and sentences than either of the prior two examples, the formula would give the text a eleventh grade reading level.
+Text: As the average number of letters and words per sentence increases, the Coleman-Liau index gives the text a higher reading level. If you were to take this paragraph, for instance, which has longer words and sentences than either of the prior two examples, the formula would give the text an eleventh grade reading level.
 Grade 11
 ```
 
